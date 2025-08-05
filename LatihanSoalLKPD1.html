@@ -65,7 +65,12 @@
                 <!-- Answer Input -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Jawaban Anda:</label>
-                    <input type="text" id="answerInput" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Masukkan jawaban...">
+                    <div class="relative">
+                        <div id="mathDisplay" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white min-h-[40px] focus-within:ring-2 focus-within:ring-indigo-500 cursor-text flex items-center" onclick="focusInput()">
+                            <span id="displayText" class="text-gray-500">Masukkan jawaban...</span>
+                        </div>
+                        <input type="text" id="answerInput" class="absolute inset-0 opacity-0 w-full h-full cursor-text" placeholder="Masukkan jawaban...">
+                    </div>
                     
                     <!-- Virtual Math Keyboard -->
                     <div class="mt-3 p-4 bg-gray-50 rounded-lg border">
@@ -81,12 +86,12 @@
                         <div class="grid grid-cols-6 gap-2 mb-2">
                             <button type="button" onclick="insertSymbol('(')" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-2 rounded text-sm font-medium transition">(</button>
                             <button type="button" onclick="insertSymbol(')')" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-2 rounded text-sm font-medium transition">)</button>
-                            <button type="button" onclick="insertSymbol('^2')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-3 py-2 rounded text-sm font-medium transition">x²</button>
+                            <button type="button" onclick="insertSuperscript('2')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-3 py-2 rounded text-sm font-medium transition">x²</button>
                             <button type="button" onclick="insertSymbol('^')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-3 py-2 rounded text-sm font-medium transition">^</button>
-                            <button type="button" onclick="insertSymbol('2^x')" class="bg-pink-100 hover:bg-pink-200 text-pink-800 px-3 py-2 rounded text-sm font-medium transition">2^x</button>
+                            <button type="button" onclick="insertExponential('2')" class="bg-pink-100 hover:bg-pink-200 text-pink-800 px-3 py-2 rounded text-sm font-medium transition">2ˣ</button>
                             <button type="button" onclick="clearInput()" class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-2 rounded text-sm font-medium transition">Clear</button>
                         </div>
-                        <div class="grid grid-cols-10 gap-1">
+                        <div class="grid grid-cols-10 gap-1 mb-2">
                             <button type="button" onclick="insertSymbol('0')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">0</button>
                             <button type="button" onclick="insertSymbol('1')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">1</button>
                             <button type="button" onclick="insertSymbol('2')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">2</button>
@@ -97,6 +102,14 @@
                             <button type="button" onclick="insertSymbol('7')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">7</button>
                             <button type="button" onclick="insertSymbol('8')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">8</button>
                             <button type="button" onclick="insertSymbol('9')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm transition">9</button>
+                        </div>
+                        <div class="grid grid-cols-6 gap-2 text-xs">
+                            <button type="button" onclick="insertExponential('3')" class="bg-pink-100 hover:bg-pink-200 text-pink-800 px-2 py-1 rounded transition">3ˣ</button>
+                            <button type="button" onclick="insertExponential('5')" class="bg-pink-100 hover:bg-pink-200 text-pink-800 px-2 py-1 rounded transition">5ˣ</button>
+                            <button type="button" onclick="insertSuperscript('3')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded transition">x³</button>
+                            <button type="button" onclick="insertSuperscript('n')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded transition">xⁿ</button>
+                            <button type="button" onclick="insertSymbol('e')" class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-2 py-1 rounded transition">e</button>
+                            <button type="button" onclick="insertExponential('e')" class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-2 py-1 rounded transition">eˣ</button>
                         </div>
                     </div>
                 </div>
@@ -255,27 +268,115 @@
                     const isHorizontal = Math.random() > 0.5;
                     
                     if (isHorizontal) {
-                        const baseAnswer = `f(x) = ${a}·${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`;
-                        const altAnswer1 = `f(x) = ${a}*${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`;
-                        const altAnswer2 = `f(x) = ${a}${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`;
+                        // Generate multiple correct answer formats
+                        const answers = [];
+                        
+                        // Special case: if h = 0, the function doesn't change
+                        if (h === 0) {
+                            // Original function remains the same
+                            if (a === 1) {
+                                answers.push(`f(x) = ${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${base}^x${b >= 0 ? '+' : ''}${b}`);
+                            } else {
+                                answers.push(`f(x) = ${a}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`f(x) = ${a}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}${base}^x${b >= 0 ? '+' : ''}${b}`);
+                            }
+                        } else {
+                            // Standard format with explicit translation
+                            if (a === 1) {
+                                answers.push(`f(x) = ${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                            } else {
+                                answers.push(`f(x) = ${a}·${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`f(x) = ${a}*${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}·${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}*${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}${base}^(x${h > 0 ? '-' : '+'}${Math.abs(h)})${b >= 0 ? '+' : ''}${b}`);
+                            }
+                            
+                            // Alternative format using exponent laws: a·b^(x+h) = a·b^x·b^h
+                            const baseToH = Math.pow(base, Math.abs(h));
+                            if (h > 0) {
+                                // For right translation: a·b^(x-h) = a·b^x·b^(-h) = (a/b^h)·b^x
+                                const newCoeff = a / baseToH;
+                                if (Number.isInteger(newCoeff) && newCoeff > 0) {
+                                    if (newCoeff === 1) {
+                                        answers.push(`f(x) = ${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                        answers.push(`${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    } else {
+                                        answers.push(`f(x) = ${newCoeff}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                        answers.push(`f(x) = ${newCoeff}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                        answers.push(`${newCoeff}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                        answers.push(`${newCoeff}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                        answers.push(`${newCoeff}${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    }
+                                }
+                            } else {
+                                // For left translation: a·b^(x+h) = a·b^x·b^h = (a·b^h)·b^x
+                                const newCoeff = a * baseToH;
+                                if (newCoeff === 1) {
+                                    answers.push(`f(x) = ${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    answers.push(`${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                } else {
+                                    answers.push(`f(x) = ${newCoeff}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    answers.push(`f(x) = ${newCoeff}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    answers.push(`${newCoeff}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    answers.push(`${newCoeff}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                    answers.push(`${newCoeff}${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                }
+                            }
+                        }
                         
                         questions.push({
-                            question: `Jika fungsi $f(x) = ${a} \\cdot ${base}^x ${b >= 0 ? '+' : ''}${b}$ ditranslasi secara horizontal sejauh ${Math.abs(h)} satuan ke ${h > 0 ? 'kanan' : 'kiri'}, tentukan fungsi hasil translasinya!`,
-                            answers: [baseAnswer, altAnswer1, altAnswer2],
-                            hint: `Translasi horizontal: ganti x dengan (x${h > 0 ? '-' : '+'}${Math.abs(h)}) pada eksponen. f(x${h > 0 ? '-' : '+'}${Math.abs(h)})`,
+                            question: `Jika fungsi $f(x) = ${a === 1 ? '' : a + ' \\cdot '}${base}^x ${b >= 0 ? '+' : ''}${b}$ ditranslasi secara horizontal sejauh ${Math.abs(h)} satuan ke ${h > 0 ? 'kanan' : 'kiri'}, tentukan fungsi hasil translasinya!`,
+                            answers: answers,
+                            hint: h === 0 ? `Translasi horizontal sejauh 0 satuan berarti fungsi tidak berubah.` : `Translasi horizontal: ganti x dengan (x${h > 0 ? '-' : '+'}${Math.abs(h)}) pada eksponen. f(x${h > 0 ? '-' : '+'}${Math.abs(h)})`,
                             type: 'horizontal'
                         });
                     } else {
-                        const answer = `f(x) = ${a}·${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`;
-                        const altAnswer1 = `f(x) = ${a}*${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`;
-                        const altAnswer2 = `f(x) = ${a}${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`;
-                        const simplifiedAnswer = `f(x) = ${a}·${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`;
-                        const simplifiedAlt = `f(x) = ${a}*${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`;
+                        const answers = [];
+                        
+                        // Special case: if k = 0, the function doesn't change
+                        if (k === 0) {
+                            // Original function remains the same
+                            if (a === 1) {
+                                answers.push(`f(x) = ${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${base}^x${b >= 0 ? '+' : ''}${b}`);
+                            } else {
+                                answers.push(`f(x) = ${a}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`f(x) = ${a}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}·${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}*${base}^x${b >= 0 ? '+' : ''}${b}`);
+                                answers.push(`${a}${base}^x${b >= 0 ? '+' : ''}${b}`);
+                            }
+                        } else {
+                            // Standard vertical translation
+                            if (a === 1) {
+                                answers.push(`f(x) = ${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`f(x) = ${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                                answers.push(`${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                            } else {
+                                answers.push(`f(x) = ${a}·${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`f(x) = ${a}*${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`f(x) = ${a}·${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                                answers.push(`f(x) = ${a}*${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                                answers.push(`${a}·${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`${a}*${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`${a}·${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                                answers.push(`${a}*${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                                answers.push(`${a}${base}^x${b >= 0 ? '+' : ''}${b}${k >= 0 ? '+' : ''}${k}`);
+                                answers.push(`${a}${base}^x${(b + k) >= 0 ? '+' : ''}${b + k}`);
+                            }
+                        }
                         
                         questions.push({
-                            question: `Jika fungsi $f(x) = ${a} \\cdot ${base}^x ${b >= 0 ? '+' : ''}${b}$ ditranslasi secara vertikal sejauh ${Math.abs(k)} satuan ke ${k > 0 ? 'atas' : 'bawah'}, tentukan fungsi hasil translasinya!`,
-                            answers: [answer, altAnswer1, altAnswer2, simplifiedAnswer, simplifiedAlt],
-                            hint: `Translasi vertikal: tambahkan ${k} pada seluruh fungsi. f(x) + k`,
+                            question: `Jika fungsi $f(x) = ${a === 1 ? '' : a + ' \\cdot '}${base}^x ${b >= 0 ? '+' : ''}${b}$ ditranslasi secara vertikal sejauh ${Math.abs(k)} satuan ke ${k > 0 ? 'atas' : 'bawah'}, tentukan fungsi hasil translasinya!`,
+                            answers: answers,
+                            hint: k === 0 ? `Translasi vertikal sejauh 0 satuan berarti fungsi tidak berubah.` : `Translasi vertikal: tambahkan ${k} pada seluruh fungsi. f(x) + k`,
                             type: 'vertical'
                         });
                     }
@@ -302,6 +403,7 @@
             document.getElementById('questionTitle').textContent = `Soal ${currentQuestionIndex + 1}`;
             document.getElementById('questionText').innerHTML = question.question;
             document.getElementById('answerInput').value = '';
+            updateMathDisplay();
             document.getElementById('hintDisplay').classList.add('hidden');
             document.getElementById('feedbackDisplay').classList.add('hidden');
             document.getElementById('nextBtn').classList.add('hidden');
@@ -347,10 +449,11 @@
                 </div>`;
                 feedbackDiv.className = 'mt-4 p-4 rounded';
             } else {
-                const possibleAnswers = correctAnswers.slice(0, 3).join('<br>atau: ');
+                const formattedAnswer = formatAnswerForDisplay(correctAnswers[0]);
                 feedbackDiv.innerHTML = `<div class="text-red-700 bg-red-100 border border-red-300 rounded p-3">
                     <strong>❌ Kurang tepat.</strong><br>
-                    <strong>Jawaban yang benar bisa berupa:</strong><br>${possibleAnswers}
+                    <strong>Jawaban yang benar:</strong><br>
+                    <div class="mt-2 p-2 bg-white rounded border font-mono text-lg">${formattedAnswer}</div>
                 </div>`;
                 feedbackDiv.className = 'mt-4 p-4 rounded';
             }
@@ -373,74 +476,382 @@
             input.value = textBefore + symbol + textAfter;
             input.focus();
             input.setSelectionRange(cursorPos + symbol.length, cursorPos + symbol.length);
+            updateMathDisplay();
+        }
+
+        function insertSuperscript(power) {
+            const input = document.getElementById('answerInput');
+            const cursorPos = input.selectionStart;
+            const textBefore = input.value.substring(0, cursorPos);
+            const textAfter = input.value.substring(input.selectionEnd);
+            
+            // Insert as ^power for internal processing
+            input.value = textBefore + '^' + power + textAfter;
+            input.focus();
+            input.setSelectionRange(cursorPos + power.length + 1, cursorPos + power.length + 1);
+            updateMathDisplay();
+        }
+
+        function insertExponential(base) {
+            const input = document.getElementById('answerInput');
+            const cursorPos = input.selectionStart;
+            const textBefore = input.value.substring(0, cursorPos);
+            const textAfter = input.value.substring(input.selectionEnd);
+            
+            // Insert as base^x for internal processing
+            input.value = textBefore + base + '^x' + textAfter;
+            input.focus();
+            input.setSelectionRange(cursorPos + base.length + 2, cursorPos + base.length + 2);
+            updateMathDisplay();
         }
 
         function clearInput() {
             document.getElementById('answerInput').value = '';
+            updateMathDisplay();
             document.getElementById('answerInput').focus();
         }
 
-        function normalizeAnswer(answer) {
-            // Remove all spaces
-            let normalized = answer.toLowerCase().replace(/\s+/g, '');
+        function focusInput() {
+            document.getElementById('answerInput').focus();
+        }
+
+        function updateMathDisplay() {
+            const input = document.getElementById('answerInput');
+            const displayText = document.getElementById('displayText');
+            
+            if (input.value.trim() === '') {
+                displayText.innerHTML = '<span class="text-gray-500">Masukkan jawaban...</span>';
+                return;
+            }
+            
+            let displayValue = input.value;
+            
+            // Convert superscripts to proper display
+            displayValue = displayValue.replace(/\^2/g, '²');
+            displayValue = displayValue.replace(/\^3/g, '³');
+            displayValue = displayValue.replace(/\^4/g, '⁴');
+            displayValue = displayValue.replace(/\^5/g, '⁵');
+            displayValue = displayValue.replace(/\^6/g, '⁶');
+            displayValue = displayValue.replace(/\^7/g, '⁷');
+            displayValue = displayValue.replace(/\^8/g, '⁸');
+            displayValue = displayValue.replace(/\^9/g, '⁹');
+            displayValue = displayValue.replace(/\^0/g, '⁰');
+            displayValue = displayValue.replace(/\^1/g, '¹');
+            displayValue = displayValue.replace(/\^n/g, 'ⁿ');
+            displayValue = displayValue.replace(/\^x/g, 'ˣ');
+            displayValue = displayValue.replace(/\^e/g, 'ᵉ');
+            
+            // Handle parentheses in exponents like ^(x+1)
+            displayValue = displayValue.replace(/\^\(([^)]+)\)/g, function(match, content) {
+                let superContent = content;
+                superContent = superContent.replace(/x/g, 'ˣ');
+                superContent = superContent.replace(/\+/g, '⁺');
+                superContent = superContent.replace(/-/g, '⁻');
+                superContent = superContent.replace(/0/g, '⁰');
+                superContent = superContent.replace(/1/g, '¹');
+                superContent = superContent.replace(/2/g, '²');
+                superContent = superContent.replace(/3/g, '³');
+                superContent = superContent.replace(/4/g, '⁴');
+                superContent = superContent.replace(/5/g, '⁵');
+                superContent = superContent.replace(/6/g, '⁶');
+                superContent = superContent.replace(/7/g, '⁷');
+                superContent = superContent.replace(/8/g, '⁸');
+                superContent = superContent.replace(/9/g, '⁹');
+                return '⁽' + superContent + '⁾';
+            });
             
             // Replace multiplication symbols
-            normalized = normalized.replace(/\*/g, '·').replace(/×/g, '·');
+            displayValue = displayValue.replace(/\*/g, '·');
             
-            // Handle different ways of writing the same expression
-            // For example: 2(x+1) = 2·(x+1) = 2*(x+1)
+            displayText.innerHTML = `<span class="text-gray-800">${displayValue}</span>`;
+        }
+
+        function normalizeAnswer(answer) {
+            // Remove all spaces and convert to lowercase
+            let normalized = answer.toLowerCase().replace(/\s+/g, '');
+            
+            // Replace different multiplication symbols with standard form
+            normalized = normalized.replace(/\*/g, '·').replace(/×/g, '·').replace(/\·/g, '·');
+            
+            // Convert superscript symbols back to ^ notation for processing
+            normalized = normalized.replace(/²/g, '^2');
+            normalized = normalized.replace(/³/g, '^3');
+            normalized = normalized.replace(/⁴/g, '^4');
+            normalized = normalized.replace(/⁵/g, '^5');
+            normalized = normalized.replace(/⁶/g, '^6');
+            normalized = normalized.replace(/⁷/g, '^7');
+            normalized = normalized.replace(/⁸/g, '^8');
+            normalized = normalized.replace(/⁹/g, '^9');
+            normalized = normalized.replace(/⁰/g, '^0');
+            normalized = normalized.replace(/¹/g, '^1');
+            normalized = normalized.replace(/ⁿ/g, '^n');
+            normalized = normalized.replace(/ˣ/g, '^x');
+            normalized = normalized.replace(/ᵉ/g, '^e');
+            
+            // Convert superscript parentheses
+            normalized = normalized.replace(/⁽/g, '^(');
+            normalized = normalized.replace(/⁾/g, ')');
+            normalized = normalized.replace(/⁺/g, '+');
+            normalized = normalized.replace(/⁻/g, '-');
+            
+            // Handle implicit multiplication: 2(x+1) = 2·(x+1)
             normalized = normalized.replace(/(\d)(\()/g, '$1·$2');
             normalized = normalized.replace(/(\))(\d)/g, '$1·$2');
             normalized = normalized.replace(/(\))(x)/g, '$1·$2');
             normalized = normalized.replace(/(x)(\d)/g, '$1·$2');
+            normalized = normalized.replace(/(x)(\()/g, '$1·$2');
+            
+            // Handle exponential expressions: 2^(x+3) vs 2^x+3
+            // Ensure parentheses are preserved for complex exponents
+            normalized = normalized.replace(/\^\(([^)]+)\)/g, '^($1)');
+            
+            // Remove redundant parentheses around single terms (but not in exponents)
+            normalized = normalized.replace(/([^\\^])\(([x\d])\)/g, '$1$2');
+            
+            // Standardize signs: remove + at the beginning
+            normalized = normalized.replace(/^f\(x\)=\+/, 'f(x)=');
             
             return normalized;
         }
 
-        function expandExpression(expr) {
-            // Simple expansion for common patterns
-            // This handles basic cases like 2(x+1) -> 2x+2
-            const expansions = [];
-            
-            // Add the original expression
-            expansions.push(expr);
-            
-            // Try to expand simple multiplication
-            let expanded = expr;
-            
-            // Pattern: a(x+b) -> ax+ab
-            expanded = expanded.replace(/(\d+)\(x([+-]\d+)\)/g, (match, a, b) => {
-                const coeff = parseInt(a);
-                const constant = parseInt(b);
-                const result = coeff * constant;
-                return `${coeff}x${result >= 0 ? '+' : ''}${result}`;
+        function expandLinearExpression(expr) {
+            // Expand expressions like 2(x+3) to 2x+6
+            return expr.replace(/(\d+)·?\(x([+-]\d+)\)/g, (match, coeff, constant) => {
+                const a = parseInt(coeff);
+                const b = parseInt(constant);
+                const result = a * b;
+                return `${a}x${result >= 0 ? '+' : ''}${result}`;
             });
+        }
+
+        function generateAnswerVariations(baseAnswer) {
+            const variations = new Set();
+            variations.add(baseAnswer);
             
-            // Pattern: a(x-b) -> ax-ab  
-            expanded = expanded.replace(/(\d+)\(x-(\d+)\)/g, (match, a, b) => {
-                const coeff = parseInt(a);
-                const constant = parseInt(b);
-                const result = coeff * constant;
-                return `${coeff}x-${result}`;
-            });
-            
-            if (expanded !== expr) {
-                expansions.push(expanded);
+            // Add version without f(x)= prefix if it exists
+            if (baseAnswer.startsWith('f(x)=')) {
+                variations.add(baseAnswer.substring(5));
+            } else {
+                variations.add('f(x)=' + baseAnswer);
             }
             
-            return expansions;
+            // Add expanded versions
+            const expanded = expandLinearExpression(baseAnswer);
+            if (expanded !== baseAnswer) {
+                variations.add(expanded);
+                if (expanded.startsWith('f(x)=')) {
+                    variations.add(expanded.substring(5));
+                } else {
+                    variations.add('f(x)=' + expanded);
+                }
+            }
+            
+            // Create a copy of current variations to iterate over
+            const currentVariations = Array.from(variations);
+            
+            // Add versions with different multiplication symbols
+            currentVariations.forEach(variation => {
+                // Replace explicit multiplication with implicit
+                variations.add(variation.replace(/·/g, '*'));
+                
+                // Handle implicit multiplication correctly for exponentials
+                // 2·3^x becomes 2*3^x or 23^x (but NOT 2^3x)
+                let implicitVersion = variation.replace(/(\d+)·(\d+\^)/g, '$1$2');
+                variations.add(implicitVersion);
+                
+                // Handle coefficient of 1: 1·3^x becomes 3^x
+                let noOneCoeff = variation.replace(/1·/g, '').replace(/1\*/g, '');
+                variations.add(noOneCoeff);
+                
+                // Add versions with different spacing
+                variations.add(variation.replace(/\s+/g, ''));
+                variations.add(variation.replace(/([+\-])/g, ' $1 '));
+                variations.add(variation.replace(/\^/g, ' ^ '));
+                
+                // Handle exponential expressions with parentheses
+                // Convert 2^(x+3) to various formats
+                if (variation.includes('^(')) {
+                    const withoutSpaces = variation.replace(/\s+/g, '');
+                    const withSpaces = variation.replace(/\^/g, ' ^ ').replace(/\(/g, ' ( ').replace(/\)/g, ' ) ');
+                    variations.add(withoutSpaces);
+                    variations.add(withSpaces);
+                }
+                
+                // Handle superscript display versions
+                let superscriptVersion = variation;
+                superscriptVersion = superscriptVersion.replace(/\^2/g, '²');
+                superscriptVersion = superscriptVersion.replace(/\^3/g, '³');
+                superscriptVersion = superscriptVersion.replace(/\^x/g, 'ˣ');
+                superscriptVersion = superscriptVersion.replace(/\^\(([^)]+)\)/g, function(match, content) {
+                    let superContent = content;
+                    superContent = superContent.replace(/x/g, 'ˣ');
+                    superContent = superContent.replace(/\+/g, '⁺');
+                    superContent = superContent.replace(/-/g, '⁻');
+                    superContent = superContent.replace(/0/g, '⁰');
+                    superContent = superContent.replace(/1/g, '¹');
+                    superContent = superContent.replace(/2/g, '²');
+                    superContent = superContent.replace(/3/g, '³');
+                    superContent = superContent.replace(/4/g, '⁴');
+                    superContent = superContent.replace(/5/g, '⁵');
+                    superContent = superContent.replace(/6/g, '⁶');
+                    superContent = superContent.replace(/7/g, '⁷');
+                    superContent = superContent.replace(/8/g, '⁸');
+                    superContent = superContent.replace(/9/g, '⁹');
+                    return '⁽' + superContent + '⁾';
+                });
+                variations.add(superscriptVersion);
+            });
+            
+            return Array.from(variations);
         }
 
         function checkAnswerVariations(userAnswer, correctAnswers) {
             const normalizedUser = normalizeAnswer(userAnswer);
             
-            for (let correctAnswer of correctAnswers) {
-                const normalizedCorrect = normalizeAnswer(correctAnswer);
-                if (normalizedUser === normalizedCorrect) {
-                    return true;
-                }
+            // Generate all possible variations for each correct answer
+            const allVariations = new Set();
+            correctAnswers.forEach(answer => {
+                const variations = generateAnswerVariations(answer);
+                variations.forEach(variation => {
+                    allVariations.add(normalizeAnswer(variation));
+                });
+            });
+            
+            // Check if user answer matches any variation
+            return allVariations.has(normalizedUser);
+        }
+
+        function formatAnswerForMathJax(answer) {
+            if (!answer || answer === '(Tidak dijawab)') return answer;
+            
+            // Use the same display formatting as the input display
+            return formatAnswerForDisplay(answer);
+        }
+
+        function formatAnswerForDisplay(answer) {
+            if (!answer || answer === '(Tidak dijawab)') return answer;
+            
+            let displayValue = answer;
+            
+            // Convert superscripts to proper display
+            displayValue = displayValue.replace(/\^2/g, '²');
+            displayValue = displayValue.replace(/\^3/g, '³');
+            displayValue = displayValue.replace(/\^4/g, '⁴');
+            displayValue = displayValue.replace(/\^5/g, '⁵');
+            displayValue = displayValue.replace(/\^6/g, '⁶');
+            displayValue = displayValue.replace(/\^7/g, '⁷');
+            displayValue = displayValue.replace(/\^8/g, '⁸');
+            displayValue = displayValue.replace(/\^9/g, '⁹');
+            displayValue = displayValue.replace(/\^0/g, '⁰');
+            displayValue = displayValue.replace(/\^1/g, '¹');
+            displayValue = displayValue.replace(/\^n/g, 'ⁿ');
+            displayValue = displayValue.replace(/\^x/g, 'ˣ');
+            displayValue = displayValue.replace(/\^e/g, 'ᵉ');
+            
+            // Handle parentheses in exponents
+            displayValue = displayValue.replace(/\^\(([^)]+)\)/g, function(match, content) {
+                let superContent = content;
+                superContent = superContent.replace(/x/g, 'ˣ');
+                superContent = superContent.replace(/\+/g, '⁺');
+                superContent = superContent.replace(/-/g, '⁻');
+                superContent = superContent.replace(/0/g, '⁰');
+                superContent = superContent.replace(/1/g, '¹');
+                superContent = superContent.replace(/2/g, '²');
+                superContent = superContent.replace(/3/g, '³');
+                superContent = superContent.replace(/4/g, '⁴');
+                superContent = superContent.replace(/5/g, '⁵');
+                superContent = superContent.replace(/6/g, '⁶');
+                superContent = superContent.replace(/7/g, '⁷');
+                superContent = superContent.replace(/8/g, '⁸');
+                superContent = superContent.replace(/9/g, '⁹');
+                return '⁽' + superContent + '⁾';
+            });
+            
+            // Replace multiplication symbols
+            displayValue = displayValue.replace(/\*/g, '·');
+            
+            return displayValue;
+        }
+
+        function generateKeyAnswersForDisplay(correctAnswers) {
+            const keyAnswers = [];
+            const seen = new Set();
+            
+            // Get the first answer as base
+            const baseAnswer = correctAnswers[0];
+            
+            // Always include the direct translation form
+            const directForm = formatAnswerForDisplay(baseAnswer);
+            if (!seen.has(directForm)) {
+                keyAnswers.push(directForm);
+                seen.add(directForm);
             }
-            return false;
+            
+            // For exponential functions, generate additional key answer forms
+            if (baseAnswer.includes('^(') || baseAnswer.includes('^x')) {
+                // Try to find simplified forms from the answers array
+                correctAnswers.forEach(answer => {
+                    const formatted = formatAnswerForDisplay(answer);
+                    if (!seen.has(formatted) && keyAnswers.length < 4) {
+                        keyAnswers.push(formatted);
+                        seen.add(formatted);
+                    }
+                });
+                
+                // Generate additional forms for exponential functions
+                if (baseAnswer.includes('^(x+') || baseAnswer.includes('^(x-')) {
+                    // Extract base and coefficients for exponential law application
+                    const match = baseAnswer.match(/(\d*)·?(\d+)\^\(x([+-]\d+)\)([+-]\d+)?/);
+                    if (match) {
+                        const coeff = match[1] || '1';
+                        const base = match[2];
+                        const hValue = parseInt(match[3]);
+                        const constant = match[4] || '+0';
+                        
+                        // Apply exponential laws: a·b^(x+h) = a·b^h·b^x
+                        const baseToH = Math.pow(parseInt(base), Math.abs(hValue));
+                        let newCoeff;
+                        
+                        if (hValue > 0) {
+                            // Left translation: multiply coefficient
+                            newCoeff = parseInt(coeff) * baseToH;
+                        } else {
+                            // Right translation: divide coefficient
+                            newCoeff = parseInt(coeff) / baseToH;
+                        }
+                        
+                        if (Number.isInteger(newCoeff) && newCoeff > 0) {
+                            let simplifiedForm;
+                            if (newCoeff === 1) {
+                                simplifiedForm = `f(x) = ${base}^x${constant}`;
+                            } else {
+                                simplifiedForm = `f(x) = ${newCoeff}·${base}^x${constant}`;
+                            }
+                            
+                            const formattedSimplified = formatAnswerForDisplay(simplifiedForm);
+                            if (!seen.has(formattedSimplified) && keyAnswers.length < 4) {
+                                keyAnswers.push(formattedSimplified);
+                                seen.add(formattedSimplified);
+                            }
+                        }
+                    }
+                }
+                
+                // Remove +0 versions if they exist
+                const withoutZero = keyAnswers.map(answer => {
+                    const cleaned = answer.replace(/\+0$/, '').replace(/\+⁰$/, '');
+                    return cleaned !== answer ? cleaned : null;
+                }).filter(answer => answer && !seen.has(answer));
+                
+                withoutZero.forEach(answer => {
+                    if (keyAnswers.length < 4) {
+                        keyAnswers.push(answer);
+                        seen.add(answer);
+                    }
+                });
+            }
+            
+            return keyAnswers.slice(0, 4); // Maximum 4 key answers
         }
 
         function nextQuestion() {
@@ -487,15 +898,33 @@
             userAnswers.forEach((answer, index) => {
                 const statusIcon = answer.isCorrect ? '✅' : '❌';
                 const statusClass = answer.isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50';
-                const possibleAnswers = answer.correctAnswers.slice(0, 3).join('<br>• ');
+                
+                // Format user answer for display
+                const userAnswerDisplay = formatAnswerForDisplay(answer.userAnswer || '(Tidak dijawab)');
+                
+                // Generate multiple key answers for display
+                const keyAnswers = generateKeyAnswersForDisplay(answer.correctAnswers);
+                const correctAnswersDisplay = keyAnswers.map(ans => 
+                    `<div class="ml-4 p-2 bg-white rounded border font-mono text-lg mb-1">${ans}</div>`
+                ).join('');
                 
                 answerKeyHTML += `
                     <div class="border ${statusClass} rounded-lg p-4">
                         <div class="font-semibold mb-2">${statusIcon} Soal ${index + 1}</div>
-                        <div class="text-sm text-gray-600 mb-2">${answer.question}</div>
-                        <div class="grid grid-cols-1 gap-2 text-sm">
-                            <div><strong>Jawaban Anda:</strong> ${answer.userAnswer || '(Tidak dijawab)'}</div>
-                            <div><strong>Jawaban yang Benar:</strong><br>• ${possibleAnswers}</div>
+                        <div class="text-sm text-gray-600 mb-3">${answer.question}</div>
+                        <div class="grid grid-cols-1 gap-3 text-sm">
+                            <div>
+                                <strong>Jawaban Anda:</strong>
+                                <div class="ml-4 p-2 bg-gray-100 rounded border mt-1">
+                                    ${answer.userAnswer ? formatAnswerForDisplay(answer.userAnswer) : '(Tidak dijawab)'}
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Jawaban yang Benar:</strong>
+                                <div class="mt-2 space-y-1">
+                                    ${correctAnswersDisplay}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -527,14 +956,23 @@
             }
         }
 
-        // Allow Enter key to submit answer
+        // Allow Enter key to submit answer and update display on input
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            const answerInput = document.getElementById('answerInput');
+            
+            answerInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     submitAnswer();
                 }
             });
+            
+            answerInput.addEventListener('input', function() {
+                updateMathDisplay();
+            });
+            
+            // Initialize display
+            updateMathDisplay();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a33eb14190ba2f',t:'MTc1NDM2NDkzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a3ab41a40ee793',t:'MTc1NDM2OTM3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
