@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Latihan Soal Generator -->
-                <div class="bg-yellow-50 p-6 rounded-lg">
+                <div class="bg-yellow-50 p-6 rounded-lg mb-6">
                     <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
                     <div class="flex gap-4 mb-4">
                         <select id="latihan-fungsi-h" class="p-2 border border-gray-300 rounded">
@@ -95,6 +95,21 @@
                         </button>
                     </div>
                     <div id="latihan-soal-h" class="hidden"></div>
+                </div>
+
+                <!-- Latihan Soal Grafik -->
+                <div class="bg-orange-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">Latihan Soal dengan Grafik</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="grafik-fungsi-h" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                        </select>
+                        <button onclick="generateGrafikSoal('horizontal')" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Soal Grafik
+                        </button>
+                    </div>
+                    <div id="grafik-soal-h" class="hidden"></div>
                 </div>
             </div>
         </div>
@@ -141,7 +156,7 @@
                 </div>
 
                 <!-- Latihan Soal Generator -->
-                <div class="bg-yellow-50 p-6 rounded-lg">
+                <div class="bg-yellow-50 p-6 rounded-lg mb-6">
                     <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
                     <div class="flex gap-4 mb-4">
                         <select id="latihan-fungsi-v" class="p-2 border border-gray-300 rounded">
@@ -154,6 +169,21 @@
                         </button>
                     </div>
                     <div id="latihan-soal-v" class="hidden"></div>
+                </div>
+
+                <!-- Latihan Soal Grafik -->
+                <div class="bg-orange-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">Latihan Soal dengan Grafik</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="grafik-fungsi-v" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                        </select>
+                        <button onclick="generateGrafikSoal('vertikal')" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Soal Grafik
+                        </button>
+                    </div>
+                    <div id="grafik-soal-v" class="hidden"></div>
                 </div>
             </div>
         </div>
@@ -201,7 +231,7 @@
                 </div>
 
                 <!-- Latihan Soal Generator -->
-                <div class="bg-yellow-50 p-6 rounded-lg">
+                <div class="bg-yellow-50 p-6 rounded-lg mb-6">
                     <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
                     <div class="flex gap-4 mb-4">
                         <select id="latihan-fungsi-rx" class="p-2 border border-gray-300 rounded">
@@ -214,6 +244,21 @@
                         </button>
                     </div>
                     <div id="latihan-soal-rx" class="hidden"></div>
+                </div>
+
+                <!-- Latihan Soal Grafik -->
+                <div class="bg-orange-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">Latihan Soal dengan Grafik</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="grafik-fungsi-rx" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                        </select>
+                        <button onclick="generateGrafikSoal('refleksi-x')" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Soal Grafik
+                        </button>
+                    </div>
+                    <div id="grafik-soal-rx" class="hidden"></div>
                 </div>
             </div>
         </div>
@@ -261,7 +306,7 @@
                 </div>
 
                 <!-- Latihan Soal Generator -->
-                <div class="bg-yellow-50 p-6 rounded-lg">
+                <div class="bg-yellow-50 p-6 rounded-lg mb-6">
                     <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
                     <div class="flex gap-4 mb-4">
                         <select id="latihan-fungsi-ry" class="p-2 border border-gray-300 rounded">
@@ -275,6 +320,21 @@
                     </div>
                     <div id="latihan-soal-ry" class="hidden"></div>
                 </div>
+
+                <!-- Latihan Soal Grafik -->
+                <div class="bg-orange-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">Latihan Soal dengan Grafik</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="grafik-fungsi-ry" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                        </select>
+                        <button onclick="generateGrafikSoal('refleksi-y')" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Soal Grafik
+                        </button>
+                    </div>
+                    <div id="grafik-soal-ry" class="hidden"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -282,6 +342,7 @@
     <script>
         let currentAnswer = '';
         let currentSolution = '';
+        let currentGrafikAnswer = '';
 
         function showTab(tabName) {
             // Hide all tab contents
@@ -717,6 +778,317 @@
             }
         }
 
+        // Function to create SVG graph
+        function createSVGGraph(func, transformedFunc, transformasi, jenisFungsi, showBothLines = true) {
+            const width = 300;
+            const height = 200;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 20;
+            const xMin = -7.5;
+            const xMax = 7.5;
+            const yMin = -5;
+            const yMax = 5;
+            
+            let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" class="border border-gray-300 bg-white">`;
+            
+            // Grid lines
+            for (let i = -6; i <= 6; i++) {
+                if (i !== 0) {
+                    svg += `<line x1="${centerX + i * scale}" y1="0" x2="${centerX + i * scale}" y2="${height}" stroke="#f0f0f0" stroke-width="1"/>`;
+                    svg += `<line x1="0" y1="${centerY + i * scale}" x2="${width}" y2="${centerY + i * scale}" stroke="#f0f0f0" stroke-width="1"/>`;
+                }
+            }
+            
+            // Axes
+            svg += `<line x1="0" y1="${centerY}" x2="${width}" y2="${centerY}" stroke="#666" stroke-width="2"/>`;
+            svg += `<line x1="${centerX}" y1="0" x2="${centerX}" y2="${height}" stroke="#666" stroke-width="2"/>`;
+            
+            // Function to draw line that extends across the entire graph
+            function drawExtendedLine(func, color, jenisFungsi, strokeDashArray = '') {
+                if (jenisFungsi === 'linear') {
+                    // For linear functions, calculate endpoints at graph boundaries
+                    const y_at_xMin = func.a * xMin + func.b;
+                    const y_at_xMax = func.a * xMax + func.b;
+                    
+                    // Convert to screen coordinates
+                    const x1_screen = centerX + xMin * scale;
+                    const y1_screen = centerY - y_at_xMin * scale;
+                    const x2_screen = centerX + xMax * scale;
+                    const y2_screen = centerY - y_at_xMax * scale;
+                    
+                    // Draw line across entire graph area
+                    svg += `<line x1="0" y1="${y1_screen + (0 - x1_screen) * (y2_screen - y1_screen) / (x2_screen - x1_screen)}" x2="${width}" y2="${y1_screen + (width - x1_screen) * (y2_screen - y1_screen) / (x2_screen - x1_screen)}" stroke="${color}" stroke-width="3" ${strokeDashArray ? `stroke-dasharray="${strokeDashArray}"` : ''}/>`;
+                    
+                } else if (jenisFungsi === 'kuadrat') {
+                    // For quadratic functions, draw smooth curve
+                    let points = '';
+                    
+                    for (let x = xMin; x <= xMax; x += 0.1) {
+                        let y;
+                        if (func.shift !== undefined) {
+                            // Handle horizontal shift for quadratic
+                            const shiftedX = x - func.shift;
+                            y = func.a * shiftedX * shiftedX + func.b * shiftedX + func.c;
+                        } else {
+                            y = func.a * x * x + func.b * x + func.c;
+                        }
+                        
+                        if (y >= yMin - 2 && y <= yMax + 2) { // Extended range for better visibility
+                            const screenX = centerX + x * scale;
+                            const screenY = centerY - y * scale;
+                            
+                            if (screenX >= -10 && screenX <= width + 10) { // Extended screen bounds
+                                points += `${screenX},${Math.max(-10, Math.min(height + 10, screenY))} `;
+                            }
+                        }
+                    }
+                    
+                    if (points) {
+                        svg += `<polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" ${strokeDashArray ? `stroke-dasharray="${strokeDashArray}"` : ''}/>`;
+                    }
+                }
+            }
+            
+            // Always draw original function (blue) first
+            drawExtendedLine(func, '#3b82f6', jenisFungsi);
+            
+            // Draw transformed function (red) if it's different from original
+            if (showBothLines && (func.a !== transformedFunc.a || func.b !== transformedFunc.b || func.c !== transformedFunc.c || transformedFunc.shift !== undefined)) {
+                drawExtendedLine(transformedFunc, '#ef4444', jenisFungsi);
+            }
+            
+            // Add axis labels
+            svg += `<text x="${centerX + 5}" y="15" fill="#666" font-size="10">y</text>`;
+            svg += `<text x="${width - 15}" y="${centerY - 5}" fill="#666" font-size="10">x</text>`;
+            
+            // Legend with better positioning
+            if (showBothLines && (func.a !== transformedFunc.a || func.b !== transformedFunc.b || func.c !== transformedFunc.c || transformedFunc.shift !== undefined)) {
+                svg += `<rect x="5" y="5" width="90" height="35" fill="white" stroke="#ccc" stroke-width="1" opacity="0.9"/>`;
+                svg += `<line x1="10" y1="15" x2="25" y2="15" stroke="#3b82f6" stroke-width="2"/>`;
+                svg += `<text x="30" y="18" fill="#3b82f6" font-size="10">Fungsi Asli</text>`;
+                svg += `<line x1="10" y1="30" x2="25" y2="30" stroke="#ef4444" stroke-width="2"/>`;
+                svg += `<text x="30" y="33" fill="#ef4444" font-size="10">Transformasi</text>`;
+            } else {
+                svg += `<rect x="5" y="5" width="70" height="20" fill="white" stroke="#ccc" stroke-width="1" opacity="0.9"/>`;
+                svg += `<line x1="10" y1="15" x2="25" y2="15" stroke="#3b82f6" stroke-width="2"/>`;
+                svg += `<text x="30" y="18" fill="#3b82f6" font-size="10">Fungsi</text>`;
+            }
+            
+            svg += '</svg>';
+            return svg;
+        }
+
+        function generateGrafikSoal(transformasi) {
+            let jenisFungsi;
+            
+            if (transformasi === 'horizontal') {
+                jenisFungsi = document.getElementById('grafik-fungsi-h').value;
+            } else if (transformasi === 'vertikal') {
+                jenisFungsi = document.getElementById('grafik-fungsi-v').value;
+            } else if (transformasi === 'refleksi-x') {
+                jenisFungsi = document.getElementById('grafik-fungsi-rx').value;
+            } else if (transformasi === 'refleksi-y') {
+                jenisFungsi = document.getElementById('grafik-fungsi-ry').value;
+            }
+
+            // Generate random coefficients
+            let a = Math.floor(Math.random() * 3) + 1;
+            const b = Math.floor(Math.random() * 6) - 3;
+            const c = Math.floor(Math.random() * 4) - 2;
+            const h = Math.floor(Math.random() * 4) + 1;
+            const k = Math.floor(Math.random() * 4) + 1;
+            
+            let originalFunc, transformedFunc, soal, correctAnswer;
+            
+            if (jenisFungsi === 'linear') {
+                originalFunc = { a: a, b: b };
+                
+                if (transformasi === 'horizontal') {
+                    const arah = Math.random() > 0.5 ? 'kanan' : 'kiri';
+                    const nilai = arah === 'kanan' ? h : -h;
+                    const arahText = arah === 'kanan' ? 'kanan' : 'kiri';
+                    
+                    transformedFunc = { a: a, b: a * (-nilai) + b };
+                    soal = `Grafik fungsi linear mengalami translasi horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'vertikal') {
+                    const arah = Math.random() > 0.5 ? 'atas' : 'bawah';
+                    const nilai = arah === 'atas' ? k : -k;
+                    const arahText = arah === 'atas' ? 'atas' : 'bawah';
+                    
+                    transformedFunc = { a: a, b: b + nilai };
+                    soal = `Grafik fungsi linear mengalami translasi vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'refleksi-x') {
+                    transformedFunc = { a: -a, b: -b };
+                    soal = `Grafik fungsi linear mengalami refleksi terhadap sumbu x. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'refleksi-y') {
+                    transformedFunc = { a: -a, b: b };
+                    soal = `Grafik fungsi linear mengalami refleksi terhadap sumbu y. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                }
+            } else if (jenisFungsi === 'kuadrat') {
+                originalFunc = { a: a, b: b, c: c };
+                
+                if (transformasi === 'horizontal') {
+                    const arah = Math.random() > 0.5 ? 'kanan' : 'kiri';
+                    const nilai = arah === 'kanan' ? h : -h;
+                    const arahText = arah === 'kanan' ? 'kanan' : 'kiri';
+                    
+                    // For quadratic, we'll show the shifted version
+                    transformedFunc = { a: a, b: b, c: c, shift: -nilai };
+                    soal = `Grafik fungsi kuadrat mengalami translasi horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'vertikal') {
+                    const arah = Math.random() > 0.5 ? 'atas' : 'bawah';
+                    const nilai = arah === 'atas' ? k : -k;
+                    const arahText = arah === 'atas' ? 'atas' : 'bawah';
+                    
+                    transformedFunc = { a: a, b: b, c: c + nilai };
+                    soal = `Grafik fungsi kuadrat mengalami translasi vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'refleksi-x') {
+                    transformedFunc = { a: -a, b: -b, c: -c };
+                    soal = `Grafik fungsi kuadrat mengalami refleksi terhadap sumbu x. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                } else if (transformasi === 'refleksi-y') {
+                    transformedFunc = { a: a, b: -b, c: c };
+                    soal = `Grafik fungsi kuadrat mengalami refleksi terhadap sumbu y. Manakah grafik yang menunjukkan hasil transformasi tersebut?`;
+                    correctAnswer = 'A';
+                }
+            }
+
+            // Create correct graph
+            const correctGraph = createSVGGraph(originalFunc, transformedFunc, transformasi, jenisFungsi, true);
+            
+            // Create wrong options with different approaches
+            // Option B: Show only original function (no transformation)
+            const wrongGraph1 = createSVGGraph(originalFunc, originalFunc, transformasi, jenisFungsi, false);
+            
+            // Option C: Wrong transformation direction or amount
+            let wrongTransform2;
+            if (jenisFungsi === 'linear') {
+                if (transformasi === 'horizontal') {
+                    // If correct is left shift, make this right shift (or vice versa)
+                    const oppositeShift = { a: originalFunc.a, b: originalFunc.b - (transformedFunc.b - originalFunc.b) };
+                    wrongTransform2 = oppositeShift;
+                } else if (transformasi === 'vertikal') {
+                    // If correct is up shift, make this down shift (or vice versa)
+                    const oppositeShift = { a: originalFunc.a, b: originalFunc.b - (transformedFunc.b - originalFunc.b) };
+                    wrongTransform2 = oppositeShift;
+                } else if (transformasi === 'refleksi-x') {
+                    wrongTransform2 = { a: originalFunc.a, b: -originalFunc.b }; // Only reflect b
+                } else if (transformasi === 'refleksi-y') {
+                    wrongTransform2 = { a: -originalFunc.a, b: -originalFunc.b }; // Wrong reflection
+                }
+            } else if (jenisFungsi === 'kuadrat') {
+                if (transformasi === 'horizontal') {
+                    // Opposite horizontal shift
+                    wrongTransform2 = { a: originalFunc.a, b: originalFunc.b, c: originalFunc.c, shift: transformedFunc.shift ? -transformedFunc.shift : 2 };
+                } else if (transformasi === 'vertikal') {
+                    // Opposite vertical shift
+                    wrongTransform2 = { a: originalFunc.a, b: originalFunc.b, c: originalFunc.c - (transformedFunc.c - originalFunc.c) };
+                } else if (transformasi === 'refleksi-x') {
+                    wrongTransform2 = { a: -originalFunc.a, b: originalFunc.b, c: originalFunc.c }; // Only reflect a
+                } else if (transformasi === 'refleksi-y') {
+                    wrongTransform2 = { a: originalFunc.a, b: originalFunc.b, c: -originalFunc.c }; // Wrong reflection
+                }
+            }
+            const wrongGraph2 = createSVGGraph(originalFunc, wrongTransform2, transformasi, jenisFungsi, true);
+            
+            // Option D: Different wrong variation
+            let wrongTransform3;
+            if (jenisFungsi === 'linear') {
+                // Make a completely different function
+                wrongTransform3 = { a: originalFunc.a === 1 ? 2 : 1, b: originalFunc.b + 2 };
+            } else if (jenisFungsi === 'kuadrat') {
+                // Make a different parabola
+                wrongTransform3 = { a: originalFunc.a === 1 ? -1 : 1, b: originalFunc.b, c: originalFunc.c + 1 };
+            }
+            const wrongGraph3 = createSVGGraph(originalFunc, wrongTransform3, transformasi, jenisFungsi, true);
+
+            currentGrafikAnswer = correctAnswer;
+
+            const containerId = `grafik-soal-${transformasi === 'horizontal' ? 'h' : transformasi === 'vertikal' ? 'v' : transformasi === 'refleksi-x' ? 'rx' : 'ry'}`;
+            document.getElementById(containerId).innerHTML = `
+                <div class="bg-white p-6 rounded border">
+                    <h4 class="font-semibold text-lg mb-3">Soal Grafik:</h4>
+                    <p class="mb-4">${soal}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="text-center">
+                            <p class="font-semibold mb-2">A.</p>
+                            ${correctGraph}
+                        </div>
+                        <div class="text-center">
+                            <p class="font-semibold mb-2">B.</p>
+                            ${wrongGraph1}
+                        </div>
+                        <div class="text-center">
+                            <p class="font-semibold mb-2">C.</p>
+                            ${wrongGraph2}
+                        </div>
+                        <div class="text-center">
+                            <p class="font-semibold mb-2">D.</p>
+                            ${wrongGraph3}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Pilih jawaban Anda:</p>
+                        <div class="flex gap-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="grafik-${transformasi}" value="A" class="mr-2">
+                                <span>A</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="grafik-${transformasi}" value="B" class="mr-2">
+                                <span>B</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="grafik-${transformasi}" value="C" class="mr-2">
+                                <span>C</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="grafik-${transformasi}" value="D" class="mr-2">
+                                <span>D</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 mb-4">
+                        <button onclick="checkGrafikAnswer('${transformasi}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+                            Periksa Jawaban
+                        </button>
+                    </div>
+                    
+                    <div id="hasil-grafik-${transformasi}" class="hidden"></div>
+                </div>
+            `;
+            document.getElementById(containerId).classList.remove('hidden');
+        }
+
+        function checkGrafikAnswer(transformasi) {
+            const selectedAnswer = document.querySelector(`input[name="grafik-${transformasi}"]:checked`);
+            const hasilDiv = document.getElementById(`hasil-grafik-${transformasi}`);
+            
+            if (!selectedAnswer) {
+                hasilDiv.innerHTML = '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">Silakan pilih jawaban terlebih dahulu!</div>';
+                hasilDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (selectedAnswer.value === currentGrafikAnswer) {
+                hasilDiv.innerHTML = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded"><strong>Benar!</strong> Anda berhasil mengidentifikasi grafik yang tepat! 🎉</div>';
+            } else {
+                hasilDiv.innerHTML = `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"><strong>Belum tepat.</strong> Jawaban yang benar adalah ${currentGrafikAnswer}. Perhatikan bagaimana transformasi mempengaruhi posisi grafik.</div>`;
+            }
+            
+            hasilDiv.classList.remove('hidden');
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             showTab('translasi-horizontal');
@@ -727,5 +1099,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e66ec6058c33d1',t:'MTc1NTA2OTQ0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e6981654246bc9',t:'MTc1NTA3MTEzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
