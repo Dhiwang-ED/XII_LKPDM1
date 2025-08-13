@@ -403,7 +403,11 @@
             }
 
             // Generate random coefficients
-            const a = Math.floor(Math.random() * 5) + 1;
+            let a = Math.floor(Math.random() * 5) + 1;
+            // For exponential functions, avoid base 1
+            if (jenisFungsi === 'eksponen' && a === 1) {
+                a = Math.floor(Math.random() * 4) + 2; // 2, 3, 4, or 5
+            }
             const b = Math.floor(Math.random() * 10) - 5;
             const c = Math.floor(Math.random() * 10) - 5;
             const h = Math.floor(Math.random() * 6) + 1;
@@ -435,7 +439,11 @@
                                  $= ${a === 1 ? '' : a}x${a * (-nilai) >= 0 ? ' + ' + (a * (-nilai)) : ' - ' + Math.abs(a * (-nilai))}${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)}$<br>
                                  $= ${jawaban}$`;
                 } else if (jenisFungsi === 'kuadrat') {
-                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b === -1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b !== 0 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''}`;
+                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2 + ${b === 1 ? '' : b}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})${c !== 0 ? (c > 0 ? ' + ' + c : ' - ' + Math.abs(c)) : ''}`;
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^{x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}}`;
                     pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
                                  $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
                 }
@@ -452,12 +460,33 @@
                     pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
                                  $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$<br>
                                  $= ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    const newC = c + nilai;
+                    jawaban = formatQuadratic(a, b, newC);
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^x${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}`;
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$<br>
+                                 $= ${jawaban}$`;
                 }
             } else if (transformasi === 'refleksi-x') {
                 soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu x. Tentukan hasil transformasinya!`;
                 
                 if (jenisFungsi === 'linear') {
                     jawaban = formatExpression(-a, -b);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal})$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = formatQuadratic(-a, -b, -c);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal})$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `-${a}^x`;
                     pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
                                  $-f(x) = -(${fungsiAwal})$<br>
                                  $= ${jawaban}$`;
@@ -469,6 +498,16 @@
                     jawaban = formatExpression(-a, b);
                     pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
                                  $f(-x) = ${a === 1 ? '' : a}(-x)${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)}$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = formatQuadratic(a, -b, c);
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a === 1 ? '' : a}(-x)^2 + ${b === 1 ? '' : b}(-x)${c !== 0 ? (c > 0 ? ' + ' + c : ' - ' + Math.abs(c)) : ''}$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^{-x}`;
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a}^{-x}$<br>
                                  $= ${jawaban}$`;
                 }
             }
@@ -505,7 +544,11 @@
             }
 
             // Generate random coefficients
-            const a = Math.floor(Math.random() * 5) + 1;
+            let a = Math.floor(Math.random() * 5) + 1;
+            // For exponential functions, avoid base 1
+            if (jenisFungsi === 'eksponen' && a === 1) {
+                a = Math.floor(Math.random() * 4) + 2; // 2, 3, 4, or 5
+            }
             const b = Math.floor(Math.random() * 10) - 5;
             const c = Math.floor(Math.random() * 10) - 5;
             const h = Math.floor(Math.random() * 6) + 1;
@@ -537,7 +580,11 @@
                     pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
                                  $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)} = ${jawaban}$`;
                 } else if (jenisFungsi === 'kuadrat') {
-                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b === -1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b !== 0 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''}`;
+                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2 + ${b === 1 ? '' : b}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})${c !== 0 ? (c > 0 ? ' + ' + c : ' - ' + Math.abs(c)) : ''}`;
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^{x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}}`;
                     pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
                                  $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
                 }
@@ -558,6 +605,10 @@
                     jawaban = formatQuadratic(a, b, newC);
                     pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
                                  $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^x${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}`;
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${jawaban}$`;
                 }
             } else if (transformasi === 'refleksi-x') {
                 soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu x. Tentukan hasil transformasinya!`;
@@ -568,6 +619,10 @@
                                  $-f(x) = -(${fungsiAwal}) = ${jawaban}$`;
                 } else if (jenisFungsi === 'kuadrat') {
                     jawaban = formatQuadratic(-a, -b, -c);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal}) = ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `-${a}^x`;
                     pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
                                  $-f(x) = -(${fungsiAwal}) = ${jawaban}$`;
                 }
@@ -581,7 +636,11 @@
                 } else if (jenisFungsi === 'kuadrat') {
                     jawaban = formatQuadratic(a, -b, c);
                     pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
-                                 $f(-x) = ${a === 1 ? '' : a}(-x)^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(-x)' : b === -1 ? '(-x)' : b !== 0 ? '(-x)' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''} = ${jawaban}$`;
+                                 $f(-x) = ${a === 1 ? '' : a}(-x)^2 + ${b === 1 ? '' : b}(-x)${c !== 0 ? (c > 0 ? ' + ' + c : ' - ' + Math.abs(c)) : ''} = ${jawaban}$`;
+                } else if (jenisFungsi === 'eksponen') {
+                    jawaban = `${a}^{-x}`;
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a}^{-x} = ${jawaban}$`;
                 }
             }
 
@@ -668,5 +727,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e64896e709ec6d',t:'MTc1NTA2Nzg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e66ec6058c33d1',t:'MTc1NTA2OTQ0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
