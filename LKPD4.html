@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Transformasi Fungsi - Kelas 12 SMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">Transformasi Fungsi</h1>
+            <p class="text-lg text-gray-600">Latihan untuk Kelas 12 SMA</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <button onclick="showTab('translasi-horizontal')" class="tab-btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm">
+                Translasi Horizontal
+            </button>
+            <button onclick="showTab('translasi-vertikal')" class="tab-btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm">
+                Translasi Vertikal
+            </button>
+            <button onclick="showTab('refleksi-x')" class="tab-btn bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm">
+                Refleksi Sumbu X
+            </button>
+            <button onclick="showTab('refleksi-y')" class="tab-btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm">
+                Refleksi Sumbu Y
+            </button>
+        </div>
+
+        <!-- Translasi Horizontal Tab -->
+        <div id="translasi-horizontal" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-6">Translasi Horizontal</h2>
+                
+                <!-- Materi -->
+                <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Materi</h3>
+                    <p class="text-lg mb-3"><strong>Rumus:</strong> $f(x-h)$ dimana $h > 0$ menggeser ke kanan, $h < 0$ menggeser ke kiri</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold mb-2">Contoh:</p>
+                            <p>Jika $f(x) = x^2$, maka:</p>
+                            <p>• $f(x-3) = (x-3)^2$ → geser 3 satuan ke kanan</p>
+                            <p>• $f(x+2) = (x+2)^2$ → geser 2 satuan ke kiri</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2">Untuk fungsi linear:</p>
+                            <p>Jika $f(x) = 2x + 1$, maka:</p>
+                            <p>• $f(x-2) = 2(x-2) + 1 = 2x - 3$</p>
+                            <p>• $f(x+3) = 2(x+3) + 1 = 2x + 7$</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh Soal Generator -->
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generator Contoh Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="contoh-fungsi-h" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateContohSoal('horizontal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Contoh
+                        </button>
+                    </div>
+                    <div id="contoh-soal-h" class="hidden bg-white p-4 rounded border"></div>
+                </div>
+
+                <!-- Latihan Soal Generator -->
+                <div class="bg-yellow-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="latihan-fungsi-h" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateLatihanSoal('horizontal')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Latihan
+                        </button>
+                    </div>
+                    <div id="latihan-soal-h" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Translasi Vertikal Tab -->
+        <div id="translasi-vertikal" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 class="text-3xl font-bold text-green-800 mb-6">Translasi Vertikal</h2>
+                
+                <!-- Materi -->
+                <div class="bg-green-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-green-700 mb-4">Materi</h3>
+                    <p class="text-lg mb-3"><strong>Rumus:</strong> $f(x) + k$ dimana $k > 0$ menggeser ke atas, $k < 0$ menggeser ke bawah</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold mb-2">Contoh:</p>
+                            <p>Jika $f(x) = x^2$, maka:</p>
+                            <p>• $f(x) + 4 = x^2 + 4$ → geser 4 satuan ke atas</p>
+                            <p>• $f(x) - 3 = x^2 - 3$ → geser 3 satuan ke bawah</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2">Untuk fungsi linear:</p>
+                            <p>Jika $f(x) = 3x - 1$, maka:</p>
+                            <p>• $f(x) + 2 = 3x - 1 + 2 = 3x + 1$</p>
+                            <p>• $f(x) - 5 = 3x - 1 - 5 = 3x - 6$</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh Soal Generator -->
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generator Contoh Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="contoh-fungsi-v" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateContohSoal('vertikal')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Contoh
+                        </button>
+                    </div>
+                    <div id="contoh-soal-v" class="hidden bg-white p-4 rounded border"></div>
+                </div>
+
+                <!-- Latihan Soal Generator -->
+                <div class="bg-yellow-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="latihan-fungsi-v" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateLatihanSoal('vertikal')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Latihan
+                        </button>
+                    </div>
+                    <div id="latihan-soal-v" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refleksi Sumbu X Tab -->
+        <div id="refleksi-x" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 class="text-3xl font-bold text-red-800 mb-6">Refleksi terhadap Sumbu X</h2>
+                
+                <!-- Materi -->
+                <div class="bg-red-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-red-700 mb-4">Materi</h3>
+                    <p class="text-lg mb-3"><strong>Rumus:</strong> $-f(x)$ → membalik grafik terhadap sumbu x</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold mb-2">Contoh:</p>
+                            <p>Jika $f(x) = x^2$, maka:</p>
+                            <p>• $-f(x) = -x^2$ → parabola terbuka ke bawah</p>
+                            <p>Jika $f(x) = 2^x$, maka:</p>
+                            <p>• $-f(x) = -2^x$ → kurva eksponensial terbalik</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2">Untuk fungsi linear:</p>
+                            <p>Jika $f(x) = 2x + 3$, maka:</p>
+                            <p>• $-f(x) = -(2x + 3) = -2x - 3$</p>
+                            <p>Semua nilai y menjadi kebalikannya</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh Soal Generator -->
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generator Contoh Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="contoh-fungsi-rx" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateContohSoal('refleksi-x')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Contoh
+                        </button>
+                    </div>
+                    <div id="contoh-soal-rx" class="hidden bg-white p-4 rounded border"></div>
+                </div>
+
+                <!-- Latihan Soal Generator -->
+                <div class="bg-yellow-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="latihan-fungsi-rx" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateLatihanSoal('refleksi-x')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Latihan
+                        </button>
+                    </div>
+                    <div id="latihan-soal-rx" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refleksi Sumbu Y Tab -->
+        <div id="refleksi-y" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 class="text-3xl font-bold text-purple-800 mb-6">Refleksi terhadap Sumbu Y</h2>
+                
+                <!-- Materi -->
+                <div class="bg-purple-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-purple-700 mb-4">Materi</h3>
+                    <p class="text-lg mb-3"><strong>Rumus:</strong> $f(-x)$ → membalik grafik terhadap sumbu y</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-semibold mb-2">Contoh:</p>
+                            <p>Jika $f(x) = 2x + 1$, maka:</p>
+                            <p>• $f(-x) = 2(-x) + 1 = -2x + 1$</p>
+                            <p>Jika $f(x) = 3^x$, maka:</p>
+                            <p>• $f(-x) = 3^{-x} = \frac{1}{3^x}$</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2">Untuk fungsi kuadrat:</p>
+                            <p>Jika $f(x) = x^2 + 2x + 1$, maka:</p>
+                            <p>• $f(-x) = (-x)^2 + 2(-x) + 1$</p>
+                            <p>• $f(-x) = x^2 - 2x + 1$</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh Soal Generator -->
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generator Contoh Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="contoh-fungsi-ry" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateContohSoal('refleksi-y')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Contoh
+                        </button>
+                    </div>
+                    <div id="contoh-soal-ry" class="hidden bg-white p-4 rounded border"></div>
+                </div>
+
+                <!-- Latihan Soal Generator -->
+                <div class="bg-yellow-50 p-6 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-yellow-700 mb-4">Generator Latihan Soal</h3>
+                    <div class="flex gap-4 mb-4">
+                        <select id="latihan-fungsi-ry" class="p-2 border border-gray-300 rounded">
+                            <option value="linear">Fungsi Linear</option>
+                            <option value="kuadrat">Fungsi Kuadrat</option>
+                            <option value="eksponen">Fungsi Eksponen</option>
+                        </select>
+                        <button onclick="generateLatihanSoal('refleksi-y')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-semibold">
+                            Generate Latihan
+                        </button>
+                    </div>
+                    <div id="latihan-soal-ry" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAnswer = '';
+        let currentSolution = '';
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-opacity-50');
+            });
+            event.target.classList.add('ring-4', 'ring-opacity-50');
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Helper function to format mathematical expressions
+        function formatExpression(a, b, c = null) {
+            let result = '';
+            
+            // Handle coefficient a for x term
+            if (a === 1) {
+                result += 'x';
+            } else if (a === -1) {
+                result += '-x';
+            } else if (a !== 0) {
+                result += `${a}x`;
+            }
+            
+            // Handle constant term b
+            if (b > 0 && result !== '') {
+                result += ` + ${b}`;
+            } else if (b < 0 && result !== '') {
+                result += ` - ${Math.abs(b)}`;
+            } else if (b !== 0 && result === '') {
+                result += `${b}`;
+            } else if (b > 0 && result === '') {
+                result += `${b}`;
+            }
+            
+            // Handle c term for quadratic (if provided)
+            if (c !== null) {
+                if (c > 0 && result !== '') {
+                    result += ` + ${c}`;
+                } else if (c < 0 && result !== '') {
+                    result += ` - ${Math.abs(c)}`;
+                } else if (c !== 0 && result === '') {
+                    result += `${c}`;
+                }
+            }
+            
+            return result || '0';
+        }
+
+        function formatQuadratic(a, b, c) {
+            let result = '';
+            
+            // Handle x² term
+            if (a === 1) {
+                result += 'x^2';
+            } else if (a === -1) {
+                result += '-x^2';
+            } else if (a !== 0) {
+                result += `${a}x^2`;
+            }
+            
+            // Handle x term
+            if (b > 0 && result !== '') {
+                if (b === 1) {
+                    result += ' + x';
+                } else {
+                    result += ` + ${b}x`;
+                }
+            } else if (b < 0 && result !== '') {
+                if (b === -1) {
+                    result += ' - x';
+                } else {
+                    result += ` - ${Math.abs(b)}x`;
+                }
+            } else if (b !== 0 && result === '') {
+                if (b === 1) {
+                    result += 'x';
+                } else if (b === -1) {
+                    result += '-x';
+                } else {
+                    result += `${b}x`;
+                }
+            }
+            
+            // Handle constant term
+            if (c > 0 && result !== '') {
+                result += ` + ${c}`;
+            } else if (c < 0 && result !== '') {
+                result += ` - ${Math.abs(c)}`;
+            } else if (c !== 0 && result === '') {
+                result += `${c}`;
+            }
+            
+            return result || '0';
+        }
+
+        function generateContohSoal(transformasi) {
+            let jenisFungsi, soal, jawaban, pembahasan;
+            
+            if (transformasi === 'horizontal') {
+                jenisFungsi = document.getElementById('contoh-fungsi-h').value;
+            } else if (transformasi === 'vertikal') {
+                jenisFungsi = document.getElementById('contoh-fungsi-v').value;
+            } else if (transformasi === 'refleksi-x') {
+                jenisFungsi = document.getElementById('contoh-fungsi-rx').value;
+            } else if (transformasi === 'refleksi-y') {
+                jenisFungsi = document.getElementById('contoh-fungsi-ry').value;
+            }
+
+            // Generate random coefficients
+            const a = Math.floor(Math.random() * 5) + 1;
+            const b = Math.floor(Math.random() * 10) - 5;
+            const c = Math.floor(Math.random() * 10) - 5;
+            const h = Math.floor(Math.random() * 6) + 1;
+            const k = Math.floor(Math.random() * 6) + 1;
+            
+            // Generate function
+            let fungsiAwal = '';
+            if (jenisFungsi === 'linear') {
+                fungsiAwal = formatExpression(a, b);
+            } else if (jenisFungsi === 'kuadrat') {
+                fungsiAwal = formatQuadratic(a, b, c);
+            } else if (jenisFungsi === 'eksponen') {
+                fungsiAwal = `${a}^x`;
+            }
+
+            // Generate transformation
+            if (transformasi === 'horizontal') {
+                const arah = Math.random() > 0.5 ? 'kanan' : 'kiri';
+                const nilai = arah === 'kanan' ? h : -h;
+                const arahText = arah === 'kanan' ? 'kanan' : 'kiri';
+                
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    const newB = a * (-nilai) + b;
+                    jawaban = formatExpression(a, newB);
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)}$<br>
+                                 $= ${a === 1 ? '' : a}x${a * (-nilai) >= 0 ? ' + ' + (a * (-nilai)) : ' - ' + Math.abs(a * (-nilai))}${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)}$<br>
+                                 $= ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b === -1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b !== 0 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''}`;
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
+                }
+            } else if (transformasi === 'vertikal') {
+                const arah = Math.random() > 0.5 ? 'atas' : 'bawah';
+                const nilai = arah === 'atas' ? k : -k;
+                const arahText = arah === 'atas' ? 'atas' : 'bawah';
+                
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    const newB = b + nilai;
+                    jawaban = formatExpression(a, newB);
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$<br>
+                                 $= ${jawaban}$`;
+                }
+            } else if (transformasi === 'refleksi-x') {
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu x. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    jawaban = formatExpression(-a, -b);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal})$<br>
+                                 $= ${jawaban}$`;
+                }
+            } else if (transformasi === 'refleksi-y') {
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu y. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    jawaban = formatExpression(-a, b);
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a === 1 ? '' : a}(-x)${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)}$<br>
+                                 $= ${jawaban}$`;
+                }
+            }
+
+            const containerId = `contoh-soal-${transformasi === 'horizontal' ? 'h' : transformasi === 'vertikal' ? 'v' : transformasi === 'refleksi-x' ? 'rx' : 'ry'}`;
+            document.getElementById(containerId).innerHTML = `
+                <h4 class="font-semibold text-lg mb-3">Contoh Soal:</h4>
+                <p class="mb-4">${soal}</p>
+                <div class="bg-blue-50 p-4 rounded">
+                    <h5 class="font-semibold text-blue-700 mb-2">Penyelesaian:</h5>
+                    <p>${pembahasan}</p>
+                    <p class="font-semibold mt-2 text-green-700">Jawaban: $${jawaban}$</p>
+                </div>
+            `;
+            document.getElementById(containerId).classList.remove('hidden');
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function generateLatihanSoal(transformasi) {
+            let jenisFungsi;
+            
+            if (transformasi === 'horizontal') {
+                jenisFungsi = document.getElementById('latihan-fungsi-h').value;
+            } else if (transformasi === 'vertikal') {
+                jenisFungsi = document.getElementById('latihan-fungsi-v').value;
+            } else if (transformasi === 'refleksi-x') {
+                jenisFungsi = document.getElementById('latihan-fungsi-rx').value;
+            } else if (transformasi === 'refleksi-y') {
+                jenisFungsi = document.getElementById('latihan-fungsi-ry').value;
+            }
+
+            // Generate random coefficients
+            const a = Math.floor(Math.random() * 5) + 1;
+            const b = Math.floor(Math.random() * 10) - 5;
+            const c = Math.floor(Math.random() * 10) - 5;
+            const h = Math.floor(Math.random() * 6) + 1;
+            const k = Math.floor(Math.random() * 6) + 1;
+            
+            // Generate function
+            let fungsiAwal = '';
+            if (jenisFungsi === 'linear') {
+                fungsiAwal = formatExpression(a, b);
+            } else if (jenisFungsi === 'kuadrat') {
+                fungsiAwal = formatQuadratic(a, b, c);
+            } else if (jenisFungsi === 'eksponen') {
+                fungsiAwal = `${a}^x`;
+            }
+
+            let soal, jawaban, pembahasan;
+
+            // Generate transformation
+            if (transformasi === 'horizontal') {
+                const arah = Math.random() > 0.5 ? 'kanan' : 'kiri';
+                const nilai = arah === 'kanan' ? h : -h;
+                const arahText = arah === 'kanan' ? 'kanan' : 'kiri';
+                
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    const newB = a * (-nilai) + b;
+                    jawaban = formatExpression(a, newB);
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)} = ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = `${a === 1 ? '' : a}(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b === -1 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : b !== 0 ? '(x' + (nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)) + ')' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''}`;
+                    pembahasan = `Karena translasi secara horizontal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)})$.<br><br>
+                                 $f(x${nilai > 0 ? '-' + nilai : '+' + Math.abs(nilai)}) = ${jawaban}$`;
+                }
+            } else if (transformasi === 'vertikal') {
+                const arah = Math.random() > 0.5 ? 'atas' : 'bawah';
+                const nilai = arah === 'atas' ? k : -k;
+                const arahText = arah === 'atas' ? 'atas' : 'bawah';
+                
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    const newB = b + nilai;
+                    jawaban = formatExpression(a, newB);
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    const newC = c + nilai;
+                    jawaban = formatQuadratic(a, b, newC);
+                    pembahasan = `Karena translasi secara vertikal ke arah ${arahText} sebesar ${Math.abs(nilai)} satuan, maka rumus transformasinya adalah $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)}$.<br><br>
+                                 $f(x)${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${fungsiAwal}${nilai > 0 ? ' + ' + nilai : ' - ' + Math.abs(nilai)} = ${jawaban}$`;
+                }
+            } else if (transformasi === 'refleksi-x') {
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu x. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    jawaban = formatExpression(-a, -b);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal}) = ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = formatQuadratic(-a, -b, -c);
+                    pembahasan = `Karena refleksi terhadap sumbu x, maka rumus transformasinya adalah $-f(x)$.<br><br>
+                                 $-f(x) = -(${fungsiAwal}) = ${jawaban}$`;
+                }
+            } else if (transformasi === 'refleksi-y') {
+                soal = `Diketahui fungsi $f(x) = ${fungsiAwal}$. Fungsi ini mengalami refleksi terhadap sumbu y. Tentukan hasil transformasinya!`;
+                
+                if (jenisFungsi === 'linear') {
+                    jawaban = formatExpression(-a, b);
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a === 1 ? '' : a}(-x)${b >= 0 ? ' + ' + b : ' - ' + Math.abs(b)} = ${jawaban}$`;
+                } else if (jenisFungsi === 'kuadrat') {
+                    jawaban = formatQuadratic(a, -b, c);
+                    pembahasan = `Karena refleksi terhadap sumbu y, maka rumus transformasinya adalah $f(-x)$.<br><br>
+                                 $f(-x) = ${a === 1 ? '' : a}(-x)^2${b === 1 ? ' + ' : b === -1 ? ' - ' : b > 0 ? ' + ' + b : b < 0 ? ' - ' + Math.abs(b) : ''}${b === 1 ? '(-x)' : b === -1 ? '(-x)' : b !== 0 ? '(-x)' : ''}${c > 0 ? ' + ' + c : c < 0 ? ' - ' + Math.abs(c) : ''} = ${jawaban}$`;
+                }
+            }
+
+            currentAnswer = jawaban;
+            currentSolution = pembahasan;
+
+            const containerId = `latihan-soal-${transformasi === 'horizontal' ? 'h' : transformasi === 'vertikal' ? 'v' : transformasi === 'refleksi-x' ? 'rx' : 'ry'}`;
+            document.getElementById(containerId).innerHTML = `
+                <div class="bg-white p-6 rounded border">
+                    <h4 class="font-semibold text-lg mb-3">Latihan Soal:</h4>
+                    <p class="mb-4">${soal}</p>
+                    
+                    <div class="mb-4">
+                        <label class="block font-semibold mb-2">Jawaban Anda:</label>
+                        <input type="text" id="jawaban-input-${transformasi}" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Masukkan jawaban Anda (contoh: 2x + 3)">
+                    </div>
+                    
+                    <div class="flex gap-4 mb-4">
+                        <button onclick="checkLatihanAnswer('${transformasi}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+                            Periksa Jawaban
+                        </button>
+                        <button onclick="showLatihanSolution('${transformasi}')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
+                            Lihat Pembahasan
+                        </button>
+                    </div>
+                    
+                    <div id="hasil-latihan-${transformasi}" class="hidden"></div>
+                    <div id="pembahasan-latihan-${transformasi}" class="hidden bg-blue-50 p-4 rounded-lg mt-4"></div>
+                </div>
+            `;
+            document.getElementById(containerId).classList.remove('hidden');
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function checkLatihanAnswer(transformasi) {
+            const userAnswer = document.getElementById(`jawaban-input-${transformasi}`).value.trim();
+            const hasilDiv = document.getElementById(`hasil-latihan-${transformasi}`);
+            
+            if (!userAnswer) {
+                hasilDiv.innerHTML = '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">Silakan masukkan jawaban terlebih dahulu!</div>';
+                hasilDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Simple check - normalize spaces and case
+            const normalizedUser = userAnswer.replace(/\s/g, '').toLowerCase();
+            const normalizedCorrect = currentAnswer.replace(/\s/g, '').toLowerCase();
+            
+            if (normalizedUser === normalizedCorrect) {
+                hasilDiv.innerHTML = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded"><strong>Benar!</strong> Jawaban Anda tepat! 🎉</div>';
+            } else {
+                hasilDiv.innerHTML = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"><strong>Belum tepat.</strong> Coba periksa kembali perhitungan Anda atau lihat pembahasan.</div>';
+            }
+            
+            hasilDiv.classList.remove('hidden');
+        }
+
+        function showLatihanSolution(transformasi) {
+            const pembahasanDiv = document.getElementById(`pembahasan-latihan-${transformasi}`);
+            pembahasanDiv.innerHTML = `
+                <h5 class="font-semibold text-lg mb-2">Pembahasan:</h5>
+                <p class="mb-2">${currentSolution}</p>
+                <p class="font-semibold text-green-700">Jawaban: $${currentAnswer}$</p>
+            `;
+            pembahasanDiv.classList.remove('hidden');
+            
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('translasi-horizontal');
+            
+            // Render MathJax when page loads
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e64896e709ec6d',t:'MTc1NTA2Nzg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
