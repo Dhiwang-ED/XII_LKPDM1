@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Soal Transformasi Fungsi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .math-expression { font-family: 'Times New Roman', serif; font-style: italic; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">🔄 Generator Soal Transformasi Fungsi</h1>
+            <p class="text-gray-600 text-lg">Latihan Translasi Horizontal Fungsi Linear, Kuadrat & Eksponen</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Fungsi:</label>
+                    <select id="functionType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="linear">Linear f(x) = ax + b</option>
+                        <option value="quadratic">Kuadrat f(x) = ax² + bx + c</option>
+                        <option value="exponential">Eksponen f(x) = a·b<sup>x</sup> + c</option>
+                        <option value="mixed">Campuran (Acak)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Soal:</label>
+                    <select id="questionType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="function">Tentukan Fungsi Hasil Translasi</option>
+                        <option value="value">Tentukan Nilai Fungsi</option>
+                        <option value="both">Keduanya (Acak)</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md">
+                        🎲 Generate Soal Baru
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="questionCard" class="bg-white rounded-xl shadow-lg p-8 mb-6 hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">📝 Soal</h2>
+                <span id="questionNumber" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Soal #1</span>
+            </div>
+            
+            <div id="questionContent" class="text-lg text-gray-700 mb-6 leading-relaxed"></div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jawaban Anda:</label>
+                    <input type="text" id="userAnswer" placeholder="Masukkan jawaban..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex items-end">
+                    <button id="checkBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                        ✓ Periksa Jawaban
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer Display -->
+        <div id="answerCard" class="bg-white rounded-xl shadow-lg p-6 hidden">
+            <div id="resultMessage" class="text-center mb-4"></div>
+            <div id="solutionSteps" class="bg-gray-50 rounded-lg p-4"></div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Statistik</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-blue-600" id="totalQuestions">0</div>
+                    <div class="text-sm text-gray-600">Total Soal</div>
+                </div>
+                <div class="bg-green-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-green-600" id="correctAnswers">0</div>
+                    <div class="text-sm text-gray-600">Benar</div>
+                </div>
+                <div class="bg-red-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-red-600" id="wrongAnswers">0</div>
+                    <div class="text-sm text-gray-600">Salah</div>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-4">
+                    <div class="text-2xl font-bold text-purple-600" id="accuracy">0%</div>
+                    <div class="text-sm text-gray-600">Akurasi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = {};
+        let questionCount = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        // Helper function to format coefficients
+        function formatCoeff(coeff, variable = '') {
+            if (coeff === 0) return '';
+            if (coeff === 1 && variable) return variable;
+            if (coeff === -1 && variable) return `-${variable}`;
+            return `${coeff}${variable}`;
+        }
+
+        // Helper function to format terms with proper signs
+        function formatTerm(coeff, variable = '', isFirst = false) {
+            if (coeff === 0) return '';
+            
+            let sign = '';
+            let absCoeff = Math.abs(coeff);
+            
+            if (!isFirst) {
+                sign = coeff > 0 ? ' + ' : ' - ';
+            } else if (coeff < 0) {
+                sign = '-';
+            }
+            
+            if (absCoeff === 1 && variable) {
+                return `${sign}${variable}`;
+            } else if (variable) {
+                return `${sign}${absCoeff}${variable}`;
+            } else {
+                return `${sign}${absCoeff}`;
+            }
+        }
+
+        // Function generators
+        const functionGenerators = {
+            linear: () => {
+                const a = Math.floor(Math.random() * 10) + 1;
+                const aSign = Math.random() < 0.5 ? 1 : -1;
+                const finalA = a * aSign;
+                const b = Math.floor(Math.random() * 20) - 10;
+                
+                let original = 'f(x) = ';
+                original += formatCoeff(finalA, 'x');
+                if (b !== 0) {
+                    original += formatTerm(b, '', false);
+                }
+                
+                return {
+                    type: 'linear',
+                    params: { a: finalA, b },
+                    original: original,
+                    evaluate: (x) => finalA * x + b
+                };
+            },
+            quadratic: () => {
+                const a = Math.floor(Math.random() * 5) + 1;
+                const aSign = Math.random() < 0.5 ? 1 : -1;
+                const finalA = a * aSign;
+                const b = Math.floor(Math.random() * 10) - 5;
+                const c = Math.floor(Math.random() * 10) - 5;
+                
+                let original = 'f(x) = ';
+                original += formatCoeff(finalA, 'x²');
+                if (b !== 0) {
+                    original += formatTerm(b, 'x', false);
+                }
+                if (c !== 0) {
+                    original += formatTerm(c, '', false);
+                }
+                
+                return {
+                    type: 'quadratic',
+                    params: { a: finalA, b, c },
+                    original: original,
+                    evaluate: (x) => finalA * x * x + b * x + c
+                };
+            },
+            exponential: () => {
+                const a = Math.floor(Math.random() * 5) + 1;
+                const b = Math.floor(Math.random() * 3) + 2;
+                const c = Math.random() < 0.6 ? Math.floor(Math.random() * 10) - 5 : 0; // 60% chance to have constant term
+                
+                let original = 'f(x) = ';
+                if (a === 1) {
+                    original += `${b}<sup>x</sup>`;
+                } else {
+                    original += `${a} · ${b}<sup>x</sup>`;
+                }
+                
+                if (c !== 0) {
+                    original += formatTerm(c, '', false);
+                }
+                
+                return {
+                    type: 'exponential',
+                    params: { a, b, c },
+                    original: original,
+                    evaluate: (x) => a * Math.pow(b, x) + c
+                };
+            }
+        };
+
+        function generateTransformation() {
+            const h = Math.floor(Math.random() * 10) - 5; // Translation -5 to 5, excluding 0
+            if (h === 0) return generateTransformation();
+            
+            const direction = h > 0 ? 'kanan' : 'kiri';
+            const absH = Math.abs(h);
+            
+            return { h, direction, absH };
+        }
+
+        function generateQuestion() {
+            const functionType = document.getElementById('functionType').value;
+            const questionType = document.getElementById('questionType').value;
+            
+            // Select function type
+            let selectedType;
+            if (functionType === 'mixed') {
+                const types = ['linear', 'quadratic', 'exponential'];
+                selectedType = types[Math.floor(Math.random() * types.length)];
+            } else {
+                selectedType = functionType;
+            }
+            
+            // Generate function
+            const func = functionGenerators[selectedType]();
+            const transformation = generateTransformation();
+            
+            // Select question type
+            let selectedQuestionType;
+            if (questionType === 'both') {
+                selectedQuestionType = Math.random() < 0.5 ? 'function' : 'value';
+            } else {
+                selectedQuestionType = questionType;
+            }
+            
+            currentQuestion = {
+                function: func,
+                transformation: transformation,
+                questionType: selectedQuestionType
+            };
+            
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const { function: func, transformation, questionType } = currentQuestion;
+            const { h, direction, absH } = transformation;
+            
+            questionCount++;
+            document.getElementById('questionNumber').textContent = `Soal #${questionCount}`;
+            
+            let questionText = '';
+            let answer = '';
+            let steps = '';
+            
+            if (questionType === 'function') {
+                questionText = `
+                    <div class="space-y-4">
+                        <p>Diketahui fungsi <span class="math-expression font-semibold">${func.original}</span></p>
+                        <p>Jika fungsi tersebut ditranslasikan <strong>${absH} satuan ke ${direction}</strong>, tentukan fungsi hasil transformasinya!</p>
+                    </div>
+                `;
+                
+                // Generate transformed function
+                if (func.type === 'linear') {
+                    const { a, b } = func.params;
+                    const newB = b - a * h;
+                    
+                    let answerStr = 'f(x) = ';
+                    answerStr += formatCoeff(a, 'x');
+                    if (newB !== 0) {
+                        answerStr += formatTerm(newB, '', false);
+                    }
+                    answer = answerStr;
+                    
+                    let originalStr = 'f(x) = ';
+                    originalStr += formatCoeff(a, 'x');
+                    if (b !== 0) {
+                        originalStr += formatTerm(b, '', false);
+                    }
+                    
+                    steps = `
+                        <h4 class="font-semibold mb-2">Langkah Penyelesaian:</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Fungsi awal: ${originalStr}</li>
+                            <li>Translasi ${absH} satuan ke ${direction} → f(x ${-h >= 0 ? '+' : ''} ${-h})</li>
+                            <li>f(x ${-h >= 0 ? '+' : ''} ${-h}) = ${formatCoeff(a, `(x ${-h >= 0 ? '+' : ''} ${-h})`)}${b !== 0 ? formatTerm(b, '', false) : ''}</li>
+                            <li>= ${formatCoeff(a, 'x')}${formatTerm(a * (-h), '', false)}${b !== 0 ? formatTerm(b, '', false) : ''}</li>
+                            <li>= ${answerStr}</li>
+                        </ol>
+                    `;
+                } else if (func.type === 'quadratic') {
+                    const { a, b, c } = func.params;
+                    const newB = b - 2 * a * h;
+                    const newC = c + a * h * h - b * h;
+                    
+                    let answerStr = 'f(x) = ';
+                    answerStr += formatCoeff(a, 'x²');
+                    if (newB !== 0) {
+                        answerStr += formatTerm(newB, 'x', false);
+                    }
+                    if (newC !== 0) {
+                        answerStr += formatTerm(newC, '', false);
+                    }
+                    answer = answerStr;
+                    
+                    let originalStr = 'f(x) = ';
+                    originalStr += formatCoeff(a, 'x²');
+                    if (b !== 0) {
+                        originalStr += formatTerm(b, 'x', false);
+                    }
+                    if (c !== 0) {
+                        originalStr += formatTerm(c, '', false);
+                    }
+                    
+                    steps = `
+                        <h4 class="font-semibold mb-2">Langkah Penyelesaian:</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Fungsi awal: ${originalStr}</li>
+                            <li>Translasi ${absH} satuan ke ${direction} → f(x ${-h >= 0 ? '+' : ''} ${-h})</li>
+                            <li>f(x ${-h >= 0 ? '+' : ''} ${-h}) = ${formatCoeff(a, `(x ${-h >= 0 ? '+' : ''} ${-h})²`)}${b !== 0 ? formatTerm(b, `(x ${-h >= 0 ? '+' : ''} ${-h})`, false) : ''}${c !== 0 ? formatTerm(c, '', false) : ''}</li>
+                            <li>Ekspansi dan penyederhanaan...</li>
+                            <li>= ${answerStr}</li>
+                        </ol>
+                    `;
+                } else { // exponential
+                    const { a, b, c } = func.params;
+                    
+                    let answerStr = 'f(x) = ';
+                    if (a === 1) {
+                        answerStr += `${b}<sup>(x ${-h >= 0 ? '+' : ''} ${-h})</sup>`;
+                    } else {
+                        answerStr += `${a} · ${b}<sup>(x ${-h >= 0 ? '+' : ''} ${-h})</sup>`;
+                    }
+                    
+                    if (c !== 0) {
+                        answerStr += formatTerm(c, '', false);
+                    }
+                    answer = answerStr;
+                    
+                    steps = `
+                        <h4 class="font-semibold mb-2">Langkah Penyelesaian:</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Fungsi awal: ${func.original}</li>
+                            <li>Translasi ${absH} satuan ke ${direction} → f(x ${-h >= 0 ? '+' : ''} ${-h})</li>
+                            <li>f(x ${-h >= 0 ? '+' : ''} ${-h}) = ${a === 1 ? '' : `${a} · `}${b}<sup>(x ${-h >= 0 ? '+' : ''} ${-h})</sup>${c !== 0 ? formatTerm(c, '', false) : ''}</li>
+                            <li>= ${answerStr}</li>
+                        </ol>
+                    `;
+                }
+            } else { // value question
+                const x = Math.floor(Math.random() * 10) + 1;
+                const transformedValue = func.evaluate(x + (-h));
+                
+                questionText = `
+                    <div class="space-y-4">
+                        <p>Diketahui fungsi <span class="math-expression font-semibold">${func.original}</span></p>
+                        <p>Jika fungsi tersebut ditranslasikan <strong>${absH} satuan ke ${direction}</strong>, tentukan nilai <span class="math-expression font-semibold">g(${x})</span> dimana g(x) adalah fungsi hasil transformasi!</p>
+                    </div>
+                `;
+                
+                answer = transformedValue.toString();
+                steps = `
+                    <h4 class="font-semibold mb-2">Langkah Penyelesaian:</h4>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Fungsi awal: f(x) = ${func.original.replace('f(x) = ', '')}</li>
+                        <li>Translasi ${absH} satuan ke ${direction} → g(x) = f(x ${-h >= 0 ? '+' : ''} ${-h})</li>
+                        <li>g(${x}) = f(${x} ${-h >= 0 ? '+' : ''} ${-h}) = f(${x + (-h)})</li>
+                        <li>= ${func.original.replace('f(x)', `f(${x + (-h)})`).replace('x', `${x + (-h)}`)}</li>
+                        <li>= ${transformedValue}</li>
+                    </ol>
+                `;
+            }
+            
+            currentQuestion.answer = answer;
+            currentQuestion.steps = steps;
+            
+            document.getElementById('questionContent').innerHTML = questionText;
+            document.getElementById('userAnswer').value = '';
+            document.getElementById('questionCard').classList.remove('hidden');
+            document.getElementById('answerCard').classList.add('hidden');
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('userAnswer').value.trim();
+            const correctAnswer = currentQuestion.answer;
+            
+            const isCorrect = userAnswer.toLowerCase().replace(/\s/g, '') === correctAnswer.toLowerCase().replace(/\s/g, '');
+            
+            if (isCorrect) {
+                correctCount++;
+                document.getElementById('resultMessage').innerHTML = `
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-2">🎉</span>
+                            <div>
+                                <strong>Benar!</strong> Jawaban Anda tepat.
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                wrongCount++;
+                document.getElementById('resultMessage').innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-2">❌</span>
+                            <div>
+                                <strong>Kurang tepat.</strong><br>
+                                Jawaban yang benar: <span class="math-expression font-semibold">${correctAnswer}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('solutionSteps').innerHTML = currentQuestion.steps;
+            document.getElementById('answerCard').classList.remove('hidden');
+            
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            document.getElementById('totalQuestions').textContent = questionCount;
+            document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('wrongAnswers').textContent = wrongCount;
+            
+            const accuracy = questionCount > 0 ? Math.round((correctCount / questionCount) * 100) : 0;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+        }
+
+        // Event listeners
+        document.getElementById('generateBtn').addEventListener('click', generateQuestion);
+        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+        document.getElementById('userAnswer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // Generate first question
+        generateQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975aa10e6607d18a',t:'MTc1NjI4Nzg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
